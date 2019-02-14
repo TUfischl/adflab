@@ -62,7 +62,7 @@
 					"body": {
 						"dataFactoryName": "@{pipeline().DataFactory}",
 						"successtype": "Succeeded",
-						"message": "@{activity('S3 to Azure Blob').output.dataWritten}",
+						"message": "@{activity('S3 to Blob').output.dataWritten}",
 						"pipelineName": "@{pipeline().Pipeline}",
 						"recipient": "@{pipeline().parameters.recipient}"
 					}
@@ -92,7 +92,7 @@
 					"headers": {
 						"Content-Type": "application/json"
 					},
-					"body": "Body{\"dataFactoryName\":\"@{pipeline().DataFactory}\",\"successtype\":\"Failed\",\"message\":\"@{activity('S3 to Azure Blob').error.message}\",\"pipelineName\":\"@{pipeline().Pipeline}\",\"recipient\":\"@{pipeline().parameters.recipient}\"}"
+					"body": "Body{\"dataFactoryName\":\"@{pipeline().DataFactory}\",\"successtype\":\"Failed\",\"message\":\"@{activity('S3 to Blob').error.message}\",\"pipelineName\":\"@{pipeline().Pipeline}\",\"recipient\":\"@{pipeline().parameters.recipient}\"}"
 				}
 			}
 		],
