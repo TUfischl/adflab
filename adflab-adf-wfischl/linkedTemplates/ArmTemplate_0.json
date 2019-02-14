@@ -539,8 +539,76 @@
 								"parameters": {}
 							}
 						]
+					},
+					{
+						"name": "Send Success E-Mail",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "S3 to Blob",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-18.eastus2.logic.azure.com:443/workflows/e75b311b4e2e40ca8f277723ab531caf",
+							"method": "POST",
+							"headers": {
+								"Content-Type": "application/json"
+							},
+							"body": {
+								"dataFactoryName": "@{pipeline().DataFactory}",
+								"successtype": "Succeeded",
+								"message": "@{activity('S3 to Azure Blob').output.dataWritten}",
+								"pipelineName": "@{pipeline().Pipeline}",
+								"recipient": "@{pipeline().parameters.recipient}"
+							}
+						}
+					},
+					{
+						"name": "Send Failure E-Mail",
+						"type": "WebActivity",
+						"dependsOn": [
+							{
+								"activity": "S3 to Blob",
+								"dependencyConditions": [
+									"Failed"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "https://prod-18.eastus2.logic.azure.com:443/workflows/e75b311b4e2e40ca8f277723ab531caf",
+							"method": "POST",
+							"headers": {
+								"Content-Type": "application/json"
+							},
+							"body": "Body{\"dataFactoryName\":\"@{pipeline().DataFactory}\",\"successtype\":\"Failed\",\"message\":\"@{activity('S3 to Azure Blob').error.message}\",\"pipelineName\":\"@{pipeline().Pipeline}\",\"recipient\":\"@{pipeline().parameters.recipient}\"}"
+						}
 					}
 				],
+				"parameters": {
+					"recipient": {
+						"type": "String",
+						"defaultValue": "wolfgang.fischl@post.at"
+					}
+				},
 				"annotations": []
 			},
 			"dependsOn": [
