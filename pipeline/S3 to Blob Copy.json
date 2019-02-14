@@ -1,3 +1,40 @@
 {
-	"name": "S3 to Blob Copy"
+	"name": "S3 to Blob Copy",
+	"properties": {
+		"activities": [
+			{
+				"name": "S3 to Blob",
+				"type": "Copy",
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"typeProperties": {
+					"source": {
+						"type": "BlobSource",
+						"recursive": true
+					},
+					"sink": {
+						"type": "BlobSink"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "Blob_Source",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "Blob_Sink",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		]
+	}
 }
