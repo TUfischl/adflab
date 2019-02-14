@@ -11,6 +11,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SSISDB Azure Endpoint'"
 		},
+		"wfischl_blob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'wfischl_blob'"
+		},
+		"AzStorage_Staging_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzStorage_Staging'"
+		},
 		"ADFLab-SSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
 			"defaultValue": "adflabsql424zi.database.windows.net"
@@ -21,6 +29,22 @@
 		},
 		"ADFLab-SSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
+		},
+		"Blob_Source_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "MASTER.txt"
+		},
+		"Blob_Source_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "s3-data"
+		},
+		"Blob_Sink_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "FAAmaster.txt"
+		},
+		"Blob_Sink_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "input/FAAmaster"
 		}
 	},
 	"variables": {
@@ -71,6 +95,32 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/wfischl_blob')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('wfischl_blob_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzStorage_Staging')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobStorage",
+				"typeProperties": {
+					"connectionString": "[parameters('AzStorage_Staging_connectionString')]"
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Module2')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -107,6 +157,395 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/SSISDB Azure Endpoint')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Blob_Source')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "wfischl_blob",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "N-Number",
+						"type": "String"
+					},
+					{
+						"name": "Serial Number",
+						"type": "String"
+					},
+					{
+						"name": "MFR MDL Code",
+						"type": "String"
+					},
+					{
+						"name": "Eng MFR Code",
+						"type": "String"
+					},
+					{
+						"name": "Year MFR",
+						"type": "String"
+					},
+					{
+						"name": "Type Registrant",
+						"type": "String"
+					},
+					{
+						"name": "Name",
+						"type": "String"
+					},
+					{
+						"name": "Street 1",
+						"type": "String"
+					},
+					{
+						"name": "Street2",
+						"type": "String"
+					},
+					{
+						"name": "City",
+						"type": "String"
+					},
+					{
+						"name": "State",
+						"type": "String"
+					},
+					{
+						"name": "ZIP",
+						"type": "String"
+					},
+					{
+						"name": "Region",
+						"type": "String"
+					},
+					{
+						"name": "County",
+						"type": "String"
+					},
+					{
+						"name": "Country",
+						"type": "String"
+					},
+					{
+						"name": "Last Activity Date",
+						"type": "String"
+					},
+					{
+						"name": "Cert Issue Date",
+						"type": "String"
+					},
+					{
+						"name": "Certification Requested",
+						"type": "String"
+					},
+					{
+						"name": "Type Aircraft",
+						"type": "String"
+					},
+					{
+						"name": "Type Engine",
+						"type": "String"
+					},
+					{
+						"name": "Status Code",
+						"type": "String"
+					},
+					{
+						"name": "Mode S Code",
+						"type": "String"
+					},
+					{
+						"name": "Fractional  Ownership",
+						"type": "String"
+					},
+					{
+						"name": "Airworthiness Date",
+						"type": "String"
+					},
+					{
+						"name": "Other Name 1",
+						"type": "String"
+					},
+					{
+						"name": "Other Name 2",
+						"type": "String"
+					},
+					{
+						"name": "Other Name 3",
+						"type": "String"
+					},
+					{
+						"name": "Other Name 4",
+						"type": "String"
+					},
+					{
+						"name": "Other Name 5",
+						"type": "String"
+					},
+					{
+						"name": "Expiration Date",
+						"type": "String"
+					},
+					{
+						"name": "Unique ID",
+						"type": "String"
+					},
+					{
+						"name": "Kit MFR Code",
+						"type": "String"
+					},
+					{
+						"name": "Kit Model",
+						"type": "String"
+					},
+					{
+						"name": "Mose S Code Hex",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"fileName": "[parameters('Blob_Source_properties_typeProperties_fileName')]",
+					"folderPath": "[parameters('Blob_Source_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/wfischl_blob')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Blob_Sink')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzStorage_Staging",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "AzureBlob",
+				"structure": [
+					{
+						"name": "N-Number",
+						"type": "String"
+					},
+					{
+						"name": "Serial Number",
+						"type": "String"
+					},
+					{
+						"name": "MFR MDL Code",
+						"type": "String"
+					},
+					{
+						"name": "Eng MFR Code",
+						"type": "String"
+					},
+					{
+						"name": "Year MFR",
+						"type": "String"
+					},
+					{
+						"name": "Type Registrant",
+						"type": "String"
+					},
+					{
+						"name": "Name",
+						"type": "String"
+					},
+					{
+						"name": "Street 1",
+						"type": "String"
+					},
+					{
+						"name": "Street2",
+						"type": "String"
+					},
+					{
+						"name": "City",
+						"type": "String"
+					},
+					{
+						"name": "State",
+						"type": "String"
+					},
+					{
+						"name": "ZIP",
+						"type": "String"
+					},
+					{
+						"name": "Region",
+						"type": "String"
+					},
+					{
+						"name": "County",
+						"type": "String"
+					},
+					{
+						"name": "Country",
+						"type": "String"
+					},
+					{
+						"name": "Last Activity Date",
+						"type": "String"
+					},
+					{
+						"name": "Cert Issue Date",
+						"type": "String"
+					},
+					{
+						"name": "Certification Requested",
+						"type": "String"
+					},
+					{
+						"name": "Type Aircraft",
+						"type": "String"
+					},
+					{
+						"name": "Type Engine",
+						"type": "String"
+					},
+					{
+						"name": "Status Code",
+						"type": "String"
+					},
+					{
+						"name": "Mode S Code",
+						"type": "String"
+					},
+					{
+						"name": "Fractional  Ownership",
+						"type": "String"
+					},
+					{
+						"name": "Airworthiness Date",
+						"type": "String"
+					},
+					{
+						"name": "Other Name 1",
+						"type": "String"
+					},
+					{
+						"name": "Other Name 2",
+						"type": "String"
+					},
+					{
+						"name": "Other Name 3",
+						"type": "String"
+					},
+					{
+						"name": "Other Name 4",
+						"type": "String"
+					},
+					{
+						"name": "Other Name 5",
+						"type": "String"
+					},
+					{
+						"name": "Expiration Date",
+						"type": "String"
+					},
+					{
+						"name": "Unique ID",
+						"type": "String"
+					},
+					{
+						"name": "Kit MFR Code",
+						"type": "String"
+					},
+					{
+						"name": "Kit Model",
+						"type": "String"
+					},
+					{
+						"name": "Mose S Code Hex",
+						"type": "String"
+					}
+				],
+				"typeProperties": {
+					"format": {
+						"type": "TextFormat",
+						"columnDelimiter": ",",
+						"rowDelimiter": "",
+						"quoteChar": "\"",
+						"nullValue": "\\N",
+						"encodingName": null,
+						"treatEmptyAsNull": true,
+						"skipLineCount": 0,
+						"firstRowAsHeader": true
+					},
+					"fileName": "[parameters('Blob_Sink_properties_typeProperties_fileName')]",
+					"folderPath": "[parameters('Blob_Sink_properties_typeProperties_folderPath')]"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzStorage_Staging')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/S3 to Blob Copy')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "S3 to Blob",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "BlobSource",
+								"recursive": true
+							},
+							"sink": {
+								"type": "BlobSink"
+							},
+							"enableStaging": false
+						},
+						"inputs": [
+							{
+								"referenceName": "Blob_Source",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Blob_Sink",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Blob_Source')]",
+				"[concat(variables('factoryId'), '/datasets/Blob_Sink')]"
 			]
 		},
 		{

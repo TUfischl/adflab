@@ -11,6 +11,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SSISDB Azure Endpoint'"
 		},
+		"wfischl_blob_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'wfischl_blob'"
+		},
+		"AzStorage_Staging_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'AzStorage_Staging'"
+		},
 		"ADFLab-SSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 			"type": "string",
 			"defaultValue": "adflabsql424zi.database.windows.net"
@@ -21,6 +29,22 @@
 		},
 		"ADFLab-SSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 			"type": "secureString"
+		},
+		"Blob_Source_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "MASTER.txt"
+		},
+		"Blob_Source_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "s3-data"
+		},
+		"Blob_Sink_properties_typeProperties_fileName": {
+			"type": "string",
+			"defaultValue": "FAAmaster.txt"
+		},
+		"Blob_Sink_properties_typeProperties_folderPath": {
+			"type": "string",
+			"defaultValue": "input/FAAmaster"
 		},
 		"containerUri": {
 			"type": "string",
@@ -52,6 +76,12 @@
 					"SSISDB Azure Endpoint_connectionString": {
 						"value": "[parameters('SSISDB Azure Endpoint_connectionString')]"
 					},
+					"wfischl_blob_connectionString": {
+						"value": "[parameters('wfischl_blob_connectionString')]"
+					},
+					"AzStorage_Staging_connectionString": {
+						"value": "[parameters('AzStorage_Staging_connectionString')]"
+					},
 					"ADFLab-SSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint": {
 						"value": "[parameters('ADFLab-SSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogServerEndpoint')]"
 					},
@@ -60,6 +90,18 @@
 					},
 					"ADFLab-SSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword": {
 						"value": "[parameters('ADFLab-SSIS_properties_typeProperties_ssisProperties_catalogInfo_catalogAdminPassword')]"
+					},
+					"Blob_Source_properties_typeProperties_fileName": {
+						"value": "[parameters('Blob_Source_properties_typeProperties_fileName')]"
+					},
+					"Blob_Source_properties_typeProperties_folderPath": {
+						"value": "[parameters('Blob_Source_properties_typeProperties_folderPath')]"
+					},
+					"Blob_Sink_properties_typeProperties_fileName": {
+						"value": "[parameters('Blob_Sink_properties_typeProperties_fileName')]"
+					},
+					"Blob_Sink_properties_typeProperties_folderPath": {
+						"value": "[parameters('Blob_Sink_properties_typeProperties_folderPath')]"
 					}
 				}
 			},
